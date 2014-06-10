@@ -1,0 +1,20 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 10.06.2014, 21:03:45
+    Author     : thomas
+*/
+.dick {
+    font-family: sans-serif;
+    font-weight: bold;
+    font-size: 200%;
+}
+.knopf {
+    background-color: #0000ff;
+    color: #ffffff;
+    text-align: center;
+}
+
