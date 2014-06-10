@@ -7,6 +7,10 @@ and open the template in the editor.
     Created on : 10.06.2014, 21:03:45
     Author     : thomas
 */
+body {
+    padding: 0px;
+    margin: 0px;
+}
 .dick {
     font-family: sans-serif;
     font-weight: bold;
