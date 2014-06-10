@@ -35,6 +35,7 @@ $(document).ready(function() {
     function start() { // baut spielfeld neu auf
         punkte = 0;
         $("#ausgabe").html("Dann mal los!");
+        $("#punkte").html("Punkte: 0");
         spiellaeuft = true;
         c.fillStyle = "#bbbbbb";
         c.fillRect(0, 0, breite, breite);
