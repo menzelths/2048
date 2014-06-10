@@ -6,10 +6,12 @@ $(document).ready(function() {
     var zeitdifferenz=600;
     var breite = Math.min(window.innerHeight, window.innerWidth);
     var delta = breite / 4.0;
-    var schriftgroesse = breite / 8.0;
+    var schriftgroesse = breite / 11.0;
+    var textspezialpunkte=[500,1000,5000,10000,20000,40000,60000,1000000];
+    var textspezial=["Nicht schlecht!","Ganz passabel!","Jetzt wird es interessant!","Ok, 10000 geknackt","Respekt!","Jetzt wird es spannend!","Auf Rekordwert!","Unfassbar!"];
     $("body").append("<div id='neu' class='knopf dick'>Neustart</div><br><p>");
     $("body").append("<canvas width='" + breite + "px' height='" + breite + "px' id='bild'></canvas><br>");
-    $("body").append("<div id='punkte' class='dick'>Punkte: 0</div><div id='ausgabe' class='dick'/>");
+    $("body").append("<div id='punkte' class='dick'>Punkte: 0</div><div id='ausgabe' class='dick'></div>");
     $("#neu").click(function() {
         start();
     });
@@ -32,7 +34,7 @@ $(document).ready(function() {
     var belegung = [];
     function start() { // baut spielfeld neu auf
         punkte = 0;
-        $("#ausgabe").html("");
+        $("#ausgabe").html("Hab Dich lieb!");
         spiellaeuft = true;
         c.fillStyle = "#bbbbbb";
         c.fillRect(0, 0, breite, breite);
@@ -58,8 +60,18 @@ $(document).ready(function() {
             c.fillRect(i % 4 * delta + 2, parseInt(i / 4) * delta + 2, delta - 4, delta - 4); // farben belegen
             c.fillStyle = "#000000";
 
-            c.fillText("" + potenzen[belegung[i]], i % 4 * delta + 2 + delta / 2, parseInt(i / 4) * delta + 2 + 2 * delta / 3);
-
+            c.fillText("" + potenzen[belegung[i]], i % 4 * delta + 2 + delta / 2, parseInt(i / 4) * delta + 2 + (delta-schriftgroesse)/2.0+schriftgroesse);
+            
+        }
+        var erreicht=0;
+        var text="";
+        for (var i=0;i<textspezialpunkte.length;i++){
+            if (punkte>textspezialpunkte[i]){
+                text=textspezial[i];
+            }
+        }
+        if (text!==""){
+            $("#ausgabe").html(text);
         }
     }
 
