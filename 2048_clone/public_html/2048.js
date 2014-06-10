@@ -69,6 +69,7 @@ $("#bild").mousedown(function(event) {
             var winkel=Math.atan2(y,x)+Math.PI+Math.PI/4.0; // winkel gegen uhrzeigersinn von negativer x-achse
             var r=parseInt(winkel/(Math.PI/2.0))%4;
             bewege(r);
+            $("#ausgabe").html("Richtung: "+richtung[r]);
         }     
     });
     
