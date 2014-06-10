@@ -2,6 +2,8 @@
 $(document).ready(function() {
     $("body").html("<div class='dick'>2048</div>");
     var punkte = 0;
+    letzter_klick= new Date().getTime();
+    var zeitdifferenz=600;
     var breite = Math.min(window.innerHeight, window.innerWidth);
     var delta = breite / 4.0;
     var schriftgroesse = breite / 8.0;
@@ -181,15 +183,14 @@ $(document).ready(function() {
             }
         }
 
-
-
     }
-
 
 
     $("#bild").mousedown(function(event) {
         event.preventDefault();
-        if (spiellaeuft === true) {
+        var jetzt=new Date().getTime();
+        if (spiellaeuft === true&&jetzt-letzter_klick>zeitdifferenz) {
+            letzter_klick=jetzt;
             var positionx = event.pageX - $("#bild")[0].offsetLeft;
             var positiony = event.pageY - $("#bild")[0].offsetTop;
             var x = positionx - breite / 2;
