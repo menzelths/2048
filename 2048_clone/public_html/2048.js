@@ -1,4 +1,3 @@
-
 $(document).ready(function() {
     $("body").html("<div class='dick'>Menzels 2048</div>");
     var punkte = 0;
@@ -16,8 +15,6 @@ $(document).ready(function() {
         start();
     });
     var c = $("#bild")[0].getContext("2d");
-    var rv = [-1, 0, 0, -1, 1, 0, 0, 1];
-    var richtung = ["links", "oben", "rechts", "unten"];
     var potenzen = [];
     var zahl = 1;
     var spiellaeuft = true;
@@ -39,32 +36,23 @@ $(document).ready(function() {
         spiellaeuft = true;
         c.fillStyle = "#bbbbbb";
         c.fillRect(0, 0, breite, breite);
-
-        // belegung löschen
-        for (var i = 0; i < 16; i++) {
+        for (var i = 0; i < 16; i++) { // belegung löschen und zufälligen wert setzen
             belegung[i] = 0;
         }
-        // zufallswert legen
-        var zz = parseInt(Math.random() * 1.3 + 1);
-        var pos = parseInt(Math.random() * 16);
         var z = holeZufall();
         belegung[z[0]] = z[1];
         render();
     }
 
     function render() {
-
         c.font = "bold " + schriftgroesse + "px Arial";
         c.textAlign = "center";
         for (var i = 0; i < 16; i++) {
             c.fillStyle = farben[belegung[i]];
             c.fillRect(i % 4 * delta + 2, parseInt(i / 4) * delta + 2, delta - 4, delta - 4); // farben belegen
             c.fillStyle = "#000000";
-
-            c.fillText("" + potenzen[belegung[i]], i % 4 * delta + 2 + delta / 2, parseInt(i / 4) * delta + 2 + (delta-schriftgroesse)/2.0+schriftgroesse);
-            
+            c.fillText("" + potenzen[belegung[i]], i % 4 * delta + 2 + delta / 2, parseInt(i / 4) * delta + 2 + (delta-schriftgroesse)/2.0+schriftgroesse);       
         }
-        var erreicht=0;
         var text="";
         for (var i=0;i<textspezialpunkte.length;i++){
             if (punkte>textspezialpunkte[i]){
@@ -76,7 +64,7 @@ $(document).ready(function() {
         }
     }
 
-    function rotiere(cx, cy, x, y, winkel) {
+    function rotiere(cx, cy, x, y, winkel) { // rotieren um cx und cy um winkel winkel
         var radians = (Math.PI / 180) * winkel,
                 cos = Math.cos(radians),
                 sin = Math.sin(radians),
@@ -87,7 +75,6 @@ $(document).ready(function() {
 
     function dreheFeld(winkel, feld) {
         this.gedrehtesFeld = [];
-        // in diese richtung wird gedreht
         for (var x = 0; x < 4; x++) {
             for (var y = 0; y < 4; y++) {
                 var koordinaten = rotiere(1.5, 1.5, x, y, winkel);
@@ -144,20 +131,16 @@ $(document).ready(function() {
                 }
             }
         }
-        // jetzt wieder zurückdrehen
-        for (var i = 0; i < 4; i++) { // feld durchlaufen
+        for (var i = 0; i < 4; i++) { // feld durchlaufen 
             for (var j = 0; j < feld[i].length - 1; j++) {
                 if (feld[i][j] === feld[i][j + 1]) {
-
                     feld[i][j]++; // potenz um 1 erhöhen
                     deltapunkte += potenzen[feld[i][j]];
                     feld[i][j + 1] *= -1; // alten wert mit -1 multiplizieren
-
                 }
             }
         }
-        // jetzt nur die positiven werte nehmen
-        var feldneu = [];
+        var feldneu = []; // jetzt nur die positiven werte nehmen
         for (var i = 0; i < 16; i++) {
             feldneu[i] = 0; // alles löschen
         }
@@ -170,10 +153,9 @@ $(document).ready(function() {
                 }
             }
         }
-        // dieses feld drehen und darstellen
         var belegung2 = dreheFeld(-r * 90, feldneu); // um fehlenden winkel weiterdrehen
-        // vergleichen mit belegung, ob sich etwas geändert hat
-        var unterschied = 0;
+        
+        var unterschied = 0; // vergleichen mit belegung, ob sich etwas geändert hat
         for (var i = 0; i < belegung.length; i++) {
             if (belegung[i] !== belegung2[i]) {
                 unterschied++;
@@ -184,8 +166,8 @@ $(document).ready(function() {
             belegung[i] = belegung2[i];      
         }
             punkte += deltapunkte;
-            // neue zufallszahl holen und setzen
-            var z = holeZufall();
+            
+            var z = holeZufall(); // neue zufallszahl holen und setzen
             if (z.length > 0) {
                 belegung[z[0]] = z[1];
                 render();
@@ -195,9 +177,7 @@ $(document).ready(function() {
                 $("#ausgabe").html("Leider verloren!");
             }
         }
-
     }
-
 
     $("#bild").mousedown(function(event) {
         event.preventDefault();
@@ -211,9 +191,7 @@ $(document).ready(function() {
             var winkel = Math.atan2(y, x) + Math.PI + Math.PI / 4.0; // winkel gegen uhrzeigersinn von negativer x-achse
             var r = parseInt(winkel / (Math.PI / 2.0)) % 4;
             bewege(r);
-            //$("#ausgabe").html("Richtung: "+richtung[r]);
         }
     });
-
     start();
 });
