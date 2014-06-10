@@ -17,12 +17,12 @@ var richtung=["links","oben","rechts","unten"];
 var potenzen=[];
 var zahl=1;
 var spiellaeuft=true;
-for (var i=0;i<3;i++){
+for (var i=0;i<6;i++){
     potenzen[i]=zahl;
     zahl*=2;
 }
 potenzen[0]=""; // kein text
-var farben=["#777777","#ffff00","ffffaa"];
+var farben=["#777777","#ffff00","ffffaa","#ffaaaa","#ff00aa","#ff0000"];
 var belegung=[];
 function start(){ // baut spielfeld neu auf
     c.fillStyle="#bbbbbb";
@@ -33,9 +33,10 @@ function start(){ // baut spielfeld neu auf
         belegung[i]=0;
     }
     // zufallswert legen
-    var zz=parseInt(Math.random()*2+1);
+    var zz=parseInt(Math.random()*1.3+1);
     var pos=parseInt(Math.random()*16);
-    belegung[pos]=zz;
+    var z=holeZufall();
+    belegung[z[0]]=z[1];
     render();
 }
 
@@ -53,10 +54,100 @@ function render(){
     }
 }
 
+function rotiere(cx, cy, x, y, winkel) {
+    var radians = (Math.PI / 180) * winkel,
+        cos = Math.cos(radians),
+        sin = Math.sin(radians),
+        nx = (cos * (x - cx)) - (sin * (y - cy)) + cx,
+        ny = (sin * (x - cx)) + (cos * (y - cy)) + cy;
+    return [nx, ny];
+}
+
+function dreheFeld(winkel,feld){
+    this.gedrehtesFeld=[];
+    // in diese richtung wird gedreht
+    for (var x=0;x<4;x++){
+        for (var y=0;y<4;y++){
+            var koordinaten=rotiere(1.5,1.5,x,y,winkel);
+            var stelle=parseInt(koordinaten[0]+.5)+parseInt(koordinaten[1]+.5)*4;
+            this.gedrehtesFeld[stelle]=feld[y*4+x];
+        }
+    }
+    return this.gedrehtesFeld;
+}
+
+function holeZufall(){
+    // freie felder zählen
+    var summe=0;
+    for (var i=0;i<belegung.length;i++){
+        if (belegung[i]===0){
+            summe++;
+        }
+    }
+    var pos1=parseInt(Math.random()*summe);
+    var zz=parseInt(Math.random()*1.3+1);
+    var pos=0;
+    summe=0;
+    for (var i=0;i<belegung.length;i++){
+        if (belegung[i]===0){
+            summe++;
+            if (summe===pos1){
+                pos=i;
+                i=belegung.length;
+            }
+        }
+    }
+    return [pos,zz];
+}
+
 function bewege(r){ // bewege feld in die richtige richtung: 0 links, 1 oben, 2 rechts, 3 unten
-    var dx=rv[r*2]; // richtige verschiebung holen, schon bezogen auf bildschirm-ks
-    var dy=rv[r*2+1];
-    
+    var feld=[];
+    for (var i=0;i<4;i++){
+        feld[i]=[];
+    }
+    if (r===1){ // anpassung an koordinatensystem
+        r=3;
+    } else if (r===3){
+        r=1;
+    }
+    var gedrehtesFeld=dreheFeld(90*r,belegung);
+    // jetzt alles nach links schieben
+    for (var y=0;y<4;y++){
+        for (var x=0;x<4;x++){
+            if (gedrehtesFeld[y*4+x]>0){
+                feld[y].push(gedrehtesFeld[y*4+x]);
+            }
+        }
+    }
+    // jetzt wieder zurückdrehen
+    for (var i=0;i<4;i++){ // feld durchlaufen
+        for (var j=0;j<feld[i].length-1;j++){
+            if (feld[i][j]===feld[i][j+1]){
+                feld[i][j]++; // potenz um 1 erhöhen
+                feld[i][j+1]*=-1; // alten wert mit -1 multiplizieren
+            } 
+        }
+    }
+    // jetzt nur die positiven werte nehmen
+    var feldneu=[];
+    for (var i=0;i<16;i++){
+        feldneu[i]=0; // alles löschen
+    }
+    for (var i=0;i<4;i++){
+        var zaehlerx=0;
+        for (var j=0;j<feld[i].length;j++){
+            if (feld[i][j]>0){
+                feldneu[i*4+zaehlerx]=feld[i][j];
+                zaehlerx++;
+            }
+        }
+    }
+    // dieses feld drehen und darstellen
+    belegung=dreheFeld(-r*90,feldneu); // um fehlenden winkel weiterdrehen
+    // neue zufallszahl holen und setzen
+    var z=holeZufall();
+    belegung[z[0]]=z[1];
+    render();
     
 }
 
