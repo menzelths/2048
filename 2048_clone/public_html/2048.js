@@ -1,6 +1,6 @@
 
 $(document).ready(function() {
-    $("body").html("<div class='dick'>Menzel 2048</div>");
+    $("body").html("<div class='dick'>Menzels 2048</div>");
     var punkte = 0;
     letzter_klick= new Date().getTime();
     var zeitdifferenz=600;
