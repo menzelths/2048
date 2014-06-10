@@ -34,7 +34,7 @@ $(document).ready(function() {
     var belegung = [];
     function start() { // baut spielfeld neu auf
         punkte = 0;
-        $("#ausgabe").html("Hab Dich lieb!");
+        $("#ausgabe").html("Dann mal los!");
         spiellaeuft = true;
         c.fillStyle = "#bbbbbb";
         c.fillRect(0, 0, breite, breite);
