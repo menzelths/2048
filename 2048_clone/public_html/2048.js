@@ -6,9 +6,10 @@
 
 $(document).ready(function(){
 $("body").html("2048<br>");
-var breite=300;
+
+var breite=Math.min(window.innerHeight,window.innerWidth);
 var delta=breite/4.0;
-var schriftgroesse=300/8.0;
+var schriftgroesse=breite/8.0;
 $("body").append("<canvas width='"+breite+"px' height='"+breite+"px' id='bild'></canvas><br><div id='ausgabe'/>");
 var c=$("#bild")[0].getContext("2d");
 var rv=[-1,0,0,-1,1,0,0,1];
@@ -56,7 +57,10 @@ function bewege(r){ // bewege feld in die richtige richtung: 0 links, 1 oben, 2 
     var dx=rv[r*2]; // richtige verschiebung holen, schon bezogen auf bildschirm-ks
     var dy=rv[r*2+1];
     
+    
 }
+
+
 
 $("#bild").mousedown(function(event) {
         event.preventDefault();
