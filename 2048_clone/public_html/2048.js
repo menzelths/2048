@@ -40,7 +40,7 @@ $(document).ready(function() {
             belegung[i] = 0;
         }
         var z = holeZufall();
-        belegung[z[0]] = z[1];
+        belegung[z[0]] = -z[1];
         render();
     }
 
@@ -48,8 +48,22 @@ $(document).ready(function() {
         c.font = "bold " + schriftgroesse + "px Arial";
         c.textAlign = "center";
         for (var i = 0; i < 16; i++) {
+            var wert=belegung[i];
+            var neu=false;
+            if (wert<0){
+                belegung[i]*=-1;
+                neu=true;
+            }
             c.fillStyle = farben[belegung[i]];
             c.fillRect(i % 4 * delta + 2, parseInt(i / 4) * delta + 2, delta - 4, delta - 4); // farben belegen
+            if (neu===true){
+                c.beginPath();
+                c.strokeStyle="#ff0000";
+                var dicke=delta/30;
+                c.lineWidth=dicke;
+                c.rect(i % 4 * delta + 2+dicke, parseInt(i / 4) * delta + 2+dicke, delta - 4-2*dicke, delta - 4-2*dicke);
+                c.stroke();
+            }
             c.fillStyle = "#000000";
             c.fillText("" + potenzen[belegung[i]], i % 4 * delta + 2 + delta / 2, parseInt(i / 4) * delta + 2 + (delta-schriftgroesse)/2.0+schriftgroesse);       
         }
@@ -87,15 +101,15 @@ $(document).ready(function() {
 
     function holeZufall() {
         // freie felder zählen
-        var summe = -1;
+        var summe = 0;
         for (var i = 0; i < belegung.length; i++) {
             if (belegung[i] === 0) {
                 summe++;
             }
         }
-        if (summe > -1) {
+        if (summe > 0) {
             var pos1 = parseInt(Math.random() * summe);
-            var zz = parseInt(Math.random() * 1.3 + 1);
+            var zz = parseInt(Math.random() * 1.2 + 1);
             var pos = 0;
             summe = -1;
             for (var i = 0; i < belegung.length; i++) {
@@ -169,7 +183,7 @@ $(document).ready(function() {
             
             var z = holeZufall(); // neue zufallszahl holen und setzen
             if (z.length > 0) {
-                belegung[z[0]] = z[1];
+                belegung[z[0]] = -z[1];
                 render();
                 $("#punkte").html("Punkte: " + punkte);
             } else {
