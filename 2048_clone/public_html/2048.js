@@ -6,8 +6,10 @@ $(document).ready(function() {
     var breite = Math.min(window.innerHeight, window.innerWidth);
     var delta = breite / 4.0;
     var schriftgroesse = breite / 11.0;
-    var textspezialpunkte=[500,1000,5000,10000,20000,40000,60000,1000000];
-    var textspezial=["Nicht schlecht!","Ganz passabel!","Jetzt wird es interessant!","Ok, 10000 geknackt","Respekt!","Jetzt wird es spannend!","Auf Rekordwert!","Unfassbar!"];
+    var max=0;
+    var text="";
+    var textspezialpunkte=[3,5,7,8,9,10,11,12,13];
+    var textspezial=["Nicht schlecht!","Ganz passabel!","Du hast es raus!","Gut gemacht!","Respekt!","Jetzt wird es spannend!","2048! Hurra!","Unfassbar!","Ist nicht wahr!"];
     $("body").append("<div id='neu' class='knopf dick'>Neustart</div><br><p>");
     $("body").append("<canvas width='" + breite + "px' height='" + breite + "px' id='bild'></canvas><br>");
     $("body").append("<div id='punkte' class='dick'>Punkte: 0</div><div id='ausgabe' class='dick'></div>");
@@ -31,7 +33,8 @@ $(document).ready(function() {
     var belegung = [];
     function start() { // baut spielfeld neu auf
         punkte = 0;
-        $("#ausgabe").html("Dann mal los!");
+        max=0;
+        text="Los geht's!";
         $("#punkte").html("Punkte: 0");
         spiellaeuft = true;
         c.fillStyle = "#bbbbbb";
@@ -56,9 +59,9 @@ $(document).ready(function() {
             }
             c.fillStyle = farben[belegung[i]];
             c.fillRect(i % 4 * delta + 2, parseInt(i / 4) * delta + 2, delta - 4, delta - 4); // farben belegen
-            if (neu===true){
+            if (neu===true){ // neue plättchen hervorheben
                 c.beginPath();
-                c.strokeStyle="#ff0000";
+                c.strokeStyle="#ffaaaa";
                 var dicke=delta/30;
                 c.lineWidth=dicke;
                 c.rect(i % 4 * delta + 2+dicke, parseInt(i / 4) * delta + 2+dicke, delta - 4-2*dicke, delta - 4-2*dicke);
@@ -67,9 +70,9 @@ $(document).ready(function() {
             c.fillStyle = "#000000";
             c.fillText("" + potenzen[belegung[i]], i % 4 * delta + 2 + delta / 2, parseInt(i / 4) * delta + 2 + (delta-schriftgroesse)/2.0+schriftgroesse);       
         }
-        var text="";
+        
         for (var i=0;i<textspezialpunkte.length;i++){
-            if (punkte>textspezialpunkte[i]){
+            if (max===textspezialpunkte[i]){
                 text=textspezial[i];
             }
         }
@@ -149,6 +152,7 @@ $(document).ready(function() {
             for (var j = 0; j < feld[i].length - 1; j++) {
                 if (feld[i][j] === feld[i][j + 1]) {
                     feld[i][j]++; // potenz um 1 erhöhen
+                    if (feld[i][j]>max) max=feld[i][j]; // höchste potenz speichern
                     deltapunkte += potenzen[feld[i][j]];
                     feld[i][j + 1] *= -1; // alten wert mit -1 multiplizieren
                 }
